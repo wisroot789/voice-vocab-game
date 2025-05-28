@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Voice Vocab Game</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #e3f2fd;
+      text-align: center;
+      padding: 30px;
+    }
+    h1 { color: #1a237e; }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 10px;
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    input {
+      padding: 10px;
+      width: 250px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    #result, #score { font-size: 18px; margin-top: 20px; }
+    .qr-section { margin-top: 40px; }
+  </style>
+</head>
+<body>
+  <h1>🎮 Voice Vocab Game</h1>
+  <p>ฟังคำศัพท์แล้วพิมพ์ความหมายภาษาไทย</p>
+  <button onclick="speakWord()">🎤 เริ่มพูด</button><br><br>
+  <input type="text" id="answer" placeholder="พิมพ์คำแปลภาษาไทย">
+  <button onclick="checkAnswer()">✅ ตรวจคำตอบ</button>
+
+  <p id="result"></p>
+  <p id="score">คะแนน: 0</p>
+
+  <script>
+    const vocab = [
+      { word: "apple", meaning: "แอปเปิล" },
+      { word: "dog", meaning: "สุนัข" },
+      { word: "school", meaning: "โรงเรียน" },
+      { word: "book", meaning: "หนังสือ" },
+      { word: "computer", meaning: "คอมพิวเตอร์" },
+      { word: "sun", meaning: "พระอาทิตย์" },
+      { word: "teacher", meaning: "ครู" }
+    ];
+
+    let currentWord = "";
+    let score = 0;
+
+    function speakWord() {
+      const random = vocab[Math.floor(Math.random() * vocab.length)];
+      currentWord = random.word;
+      const utterance = new SpeechSynthesisUtterance(currentWord);
+      utterance.lang = "en-US";
+      speechSynthesis.speak(utterance);
+      document.getElementById("result").innerText = "";
+    }
+
+    function checkAnswer() {
+      const userAnswer = document.getElementById("answer").value.trim();
+      const correct = vocab.find(v => v.word === currentWord);
+
+      if (correct && userAnswer === correct.meaning) {
+        document.getElementById("result").innerText = "✅ ถูกต้อง!";
+        score++;
+      } else {
+        document.getElementById("result").innerText = `❌ คำตอบผิด คำที่ถูกคือ "${correct.meaning}"`;
+      }
+      document.getElementById("score").innerText = `คะแนน: ${score}`;
+      document.getElementById("answer").value = "";
+    }
+  </script>
+
+  <div class="qr-section">
+    <h2>📱 เข้าเล่นผ่านมือถือ</h2>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://yourusername.github.io/voice-vocab-game/" alt="QR Code">
+    <p><a href="https://yourusername.github.io/voice-vocab-game/" target="_blank">เปิดลิงก์เกม</a></p>
+  </div>
+</body>
+</html>
